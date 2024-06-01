@@ -1,6 +1,10 @@
 # Scroll Windows Virtual Desktops
 
-This tool scrolls through your virtual desktops. See https://medium.com/p/cbb659435849 for more details.
+Scroll through your virtual desktops by using the mouse wheel when your cursor is at the upper edge of the screen, similar to the functionality provided by the Gnome extension [Desktop Scroller All Sides](https://extensions.gnome.org/extension/561/desktop-scroller-all-sides-for-gnome-36/).
+
+To trigger the desktop overview, move your cursor to the upper left corner of the screen (Windows + Tab).
+
+See https://medium.com/p/cbb659435849 for more details of original repo.
 
 ## Install requirements
 
