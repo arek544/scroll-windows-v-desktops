@@ -1,7 +1,8 @@
 {
-  "xMin": 395,
-  "xMax": 435,
-  "yMin": 1400,
-  "yMax": 1440,
-  "printPosition": false
+  "xMin": 0,
+  "xMax": 50,
+  "yMin": 0,
+  "yMax": 5000,
+  "printPosition": true,
+  "scroll_delay": 0.3
 }
