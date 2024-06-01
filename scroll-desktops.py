@@ -1,14 +1,26 @@
 from pynput import mouse
 from pynput.keyboard import Key, Controller
-import json
 import time
+from screeninfo import get_monitors
 
-with open("config.json", "r") as f:
-    config = json.load(f)
 
 keyboard = Controller()
 last_scroll_time = time.time()
 last_hot_corner_time = time.time()
+
+
+def get_monitor_with_cursor():
+    """
+    Returns the monitor where the cursor is currently located.
+
+    Returns:
+        The monitor object where the cursor is located, or None if the cursor is not within any monitor.
+    """
+    x, y = mouse.Controller().position
+    for m in get_monitors():
+        if m.x <= x < m.x + m.width and m.y <= y < m.y + m.height:
+            return m
+    return None
 
 
 def on_scroll(x, y, dx, dy):
@@ -24,17 +36,15 @@ def on_scroll(x, y, dx, dy):
 
     global last_scroll_time
     current_time = time.time()
+    monitor = get_monitor_with_cursor()
+    y_max = 50
+    scroll_delay = 0.3
 
     # If the time since the last scroll is greater than the delay
-    if current_time - last_scroll_time >= config["scroll_delay"]:
+    if current_time - last_scroll_time >= scroll_delay:
 
         # If the mouse is within the bounds of the trigger area
-        if (
-            x >= config["xMin"]
-            and x <= config["xMax"]
-            and y >= config["yMin"]
-            and y <= config["yMax"]
-        ):
+        if x >= 0 and x <= monitor.width and y >= 0 and y <= y_max:
 
             # Press shortcut to switch desktops
             keyboard.press(Key.cmd)
@@ -51,10 +61,6 @@ def on_scroll(x, y, dx, dy):
             else:
                 keyboard.release(Key.left)
 
-        # If the printPosition flag is set to True, print the position of the mouse
-        if config["printPosition"]:
-            print("Scrolled {0} at {1}".format("down" if dy < 0 else "up", (x, y)))
-
         last_scroll_time = current_time
 
 
@@ -70,16 +76,11 @@ def on_move(x, y):
     global last_hot_corner_time
     current_time = time.time()
 
-    # If the mouse is in the upper-left corner of the screen 
-    if (
-        x >= config["xMin"]
-        and x <= config["xMin"] + 1
-        and y >= config["yMin"]
-        and y <= config["yMin"] + 1
-    ):
-
+    # If the mouse is in the upper-left corner of the screen
+    if x >= 0 and x <= 1 and y >= 0 and y <= 1:
         delay = 0.5
         if current_time - last_hot_corner_time >= delay:
+            # Press shortcut to show desktop overview
             keyboard.press(Key.cmd)
             keyboard.press(Key.tab)
             keyboard.release(Key.cmd)
@@ -88,12 +89,5 @@ def on_move(x, y):
         last_hot_corner_time = current_time
 
 
-if config["hotCorner"]:
-    # Switch desktops with scroll wheel and show overview when mouse is
-    # in upper-left corner of main desktop so called "hot corner"
-    with mouse.Listener(on_scroll=on_scroll, on_move=on_move) as listener:
-        listener.join()
-else:
-    # Only switch desktops with scroll wheel
-    with mouse.Listener(on_scroll=on_scroll) as listener:
-        listener.join()
+with mouse.Listener(on_scroll=on_scroll, on_move=on_move) as listener:
+    listener.join()

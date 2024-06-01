@@ -1,9 +1,0 @@
-{
-  "xMin": 0,
-  "xMax": 50,
-  "yMin": 0,
-  "yMax": 5000,
-  "printPosition": true,
-  "hotCorner": true,
-  "scroll_delay": 0.3
-}
