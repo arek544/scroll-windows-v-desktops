@@ -42,10 +42,15 @@ def on_scroll(x, y, dx, dy):
 
     # If the time since the last scroll is greater than the delay
     if current_time - last_scroll_time >= scroll_delay:
-
         # If the mouse is within the bounds of the trigger area
-        if x >= 0 and x <= monitor.width and y >= 0 and y <= y_max:
-
+        x_relative = x - monitor.x
+        y_ralative = y - monitor.y
+        if (
+            x_relative >= 0
+            and x_relative <= monitor.width
+            and y_ralative >= 0
+            and y_ralative <= y_max
+        ):
             # Press shortcut to switch desktops
             keyboard.press(Key.cmd)
             keyboard.press(Key.ctrl)
