@@ -37,8 +37,8 @@ def on_scroll(x, y, dx, dy):
     global last_scroll_time
     current_time = time.time()
     monitor = get_monitor_with_cursor()
-    y_max = 50
-    scroll_delay = 0.3
+    y_max = 30
+    scroll_delay = 0.4
 
     # If the time since the last scroll is greater than the delay
     if current_time - last_scroll_time >= scroll_delay:
