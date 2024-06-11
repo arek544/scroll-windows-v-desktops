@@ -1,3 +1,21 @@
+"""
+This script allows you to switch between virtual desktops on Windows 10/11 
+using mouse scroll and hot corner.
+
+Requirements:
+- pynput library (install using pip install pynput)
+- screeninfo library (install using pip install screeninfo)
+
+Usage:
+1. Run the script.
+2. Move your cursor to the top of the screen and scroll the mouse wheel up 
+   or down to switch between virtual desktops.
+3. Move the mouse to the upper-left corner of the screen to show the desktop
+   overview.
+
+Note: This script is specifically designed for Windows 10/11.
+"""
+
 from pynput import mouse
 from pynput.keyboard import Key, Controller
 import time
