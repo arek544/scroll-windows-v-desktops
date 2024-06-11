@@ -5,6 +5,7 @@ from screeninfo import get_monitors
 
 #################### Windows-specific shortcuts ##############################
 
+
 def winows_desktop_overview():
     """
     Shows the desktop overview on Windows 10.
@@ -18,7 +19,7 @@ def winows_desktop_overview():
 def windows_switch_desktops(dy):
     """
     Switches desktops on Windows 10.
-    
+
     Args:
       dy (int): The vertical distance scrolled.
     """
@@ -39,13 +40,14 @@ def windows_switch_desktops(dy):
 
 ################## Create all trigger zones ##################################
 
+
 def get_trigger_area(monitor):
     vertical_margin = 30
     return [
-        monitor.x, 
-        monitor.y , 
-        monitor.x + monitor.width, 
-        monitor.y + vertical_margin
+        monitor.x,
+        monitor.y,
+        monitor.x + monitor.width,
+        monitor.y + vertical_margin,
     ]
 
 
@@ -55,7 +57,7 @@ def is_point_inside_rectangle(point, rectangle):
 
     Args:
         point (tuple): The coordinates of the point (x, y).
-        rectangle (list): The coordinates of the rectangle 
+        rectangle (list): The coordinates of the rectangle
             [x_left_lower, y_left_lower, x_right_upper, y_right_upper].
 
     Returns:
@@ -69,6 +71,7 @@ def is_point_inside_rectangle(point, rectangle):
     else:
         return False
 
+
 ############################ Initialization ##################################
 
 monitors = [get_trigger_area(monitor) for monitor in get_monitors()]
@@ -81,6 +84,7 @@ last_esc_press_time = time.time()
 
 
 ######################### Event handlers #####################################
+
 
 def on_scroll(x, y, dx, dy):
     """
@@ -130,6 +134,8 @@ def on_move(x, y):
 
         last_hot_corner_time = current_time
 
+
+######################### Event loop ##########################################
 
 with mouse.Listener(on_scroll=on_scroll, on_move=on_move) as listener:
     listener.join()
