@@ -20,11 +20,12 @@ from pynput import mouse
 from pynput.keyboard import Key, Controller
 import time
 from screeninfo import get_monitors
+import screeninfo
 
 #################### Windows-specific shortcuts ##############################
 
 
-def winows_desktop_overview():
+def winows_desktop_overview() -> None:
     """
     Shows the desktop overview on Windows 10.
     """
@@ -34,7 +35,7 @@ def winows_desktop_overview():
     keyboard.release(Key.tab)
 
 
-def windows_switch_desktops(dy):
+def windows_switch_desktops(dy: int) -> None:
     """
     Switches desktops on Windows 10.
 
@@ -59,7 +60,7 @@ def windows_switch_desktops(dy):
 ################## Create all trigger zones ##################################
 
 
-def get_trigger_area(monitor):
+def get_trigger_area(monitor: screeninfo.common.Monitor) -> list:
     vertical_margin = 30
     return [
         monitor.x,
@@ -69,7 +70,7 @@ def get_trigger_area(monitor):
     ]
 
 
-def is_point_inside_rectangle(point, rectangle):
+def is_point_inside_rectangle(point: list, rectangle: list) -> bool:
     """
     Check if a point is inside a rectangle.
 
@@ -104,7 +105,7 @@ last_esc_press_time = time.time()
 ######################### Event handlers #####################################
 
 
-def on_scroll(x, y, dx, dy):
+def on_scroll(x: int, y: int, dx: int, dy: int) -> None:
     """
     Event handler for mouse scroll events.
 
@@ -116,9 +117,7 @@ def on_scroll(x, y, dx, dy):
     """
 
     global last_scroll_time
-    # global monitor
     current_time = time.time()
-    # y_max = 30
     scroll_delay = 0.3
 
     # If the time since the last scroll is greater than the delay
@@ -131,7 +130,7 @@ def on_scroll(x, y, dx, dy):
         last_scroll_time = current_time
 
 
-def on_move(x, y):
+def on_move(x: int, y: int) -> None:
     """
     Callback function triggered when the mouse moves.
 
