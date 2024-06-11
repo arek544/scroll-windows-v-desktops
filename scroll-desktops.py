@@ -3,6 +3,40 @@ from pynput.keyboard import Key, Controller
 import time
 from screeninfo import get_monitors
 
+#################### Windows-specific shortcuts ##############################
+
+def winows_desktop_overview():
+    """
+    Shows the desktop overview on Windows 10.
+    """
+    keyboard.press(Key.cmd)
+    keyboard.press(Key.tab)
+    keyboard.release(Key.cmd)
+    keyboard.release(Key.tab)
+
+
+def windows_switch_desktops(dy):
+    """
+    Switches desktops on Windows 10.
+    
+    Args:
+      dy (int): The vertical distance scrolled.
+    """
+    keyboard.press(Key.cmd)
+    keyboard.press(Key.ctrl)
+    if dy < 0:
+        keyboard.press(Key.right)
+    else:
+        keyboard.press(Key.left)
+
+    keyboard.release(Key.cmd)
+    keyboard.release(Key.ctrl)
+    if dy < 0:
+        keyboard.release(Key.right)
+    else:
+        keyboard.release(Key.left)
+
+
 
 keyboard = Controller()
 last_scroll_time = time.time()
@@ -52,19 +86,7 @@ def on_scroll(x, y, dx, dy):
             and y_ralative <= y_max
         ):
             # Press shortcut to switch desktops
-            keyboard.press(Key.cmd)
-            keyboard.press(Key.ctrl)
-            if dy < 0:
-                keyboard.press(Key.right)
-            else:
-                keyboard.press(Key.left)
-
-            keyboard.release(Key.cmd)
-            keyboard.release(Key.ctrl)
-            if dy < 0:
-                keyboard.release(Key.right)
-            else:
-                keyboard.release(Key.left)
+            windows_switch_desktops(dy)
 
         last_scroll_time = current_time
 
@@ -86,10 +108,7 @@ def on_move(x, y):
         delay = 0.5
         if current_time - last_hot_corner_time >= delay:
             # Press shortcut to show desktop overview
-            keyboard.press(Key.cmd)
-            keyboard.press(Key.tab)
-            keyboard.release(Key.cmd)
-            keyboard.release(Key.tab)
+            winows_desktop_overview()
 
         last_hot_corner_time = current_time
 
