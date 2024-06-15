@@ -85,7 +85,10 @@ def is_point_inside_rectangle(point: list, rectangle: list) -> bool:
     x, y = point
     x_left_lower, y_left_lower, x_right_upper, y_right_upper = rectangle
 
-    if x_left_lower <= x <= x_right_upper and y_left_lower <= y <= y_right_upper:
+    if (
+        x_left_lower <= x <= x_right_upper
+        and y_left_lower <= y <= y_right_upper
+    ):
         return True
     else:
         return False
@@ -123,7 +126,12 @@ def on_scroll(x: int, y: int, dx: int, dy: int) -> None:
     # If the time since the last scroll is greater than the delay
     if current_time - last_scroll_time >= scroll_delay:
         # If the mouse is within the bounds of the trigger area
-        if any([is_point_inside_rectangle((x, y), monitor) for monitor in monitors]):
+        if any(
+            [
+                is_point_inside_rectangle((x, y), monitor)
+                for monitor in monitors
+            ]
+        ):
             # Press shortcut to switch desktops
             windows_switch_desktops(dy)
 
