@@ -1,6 +1,6 @@
 """
-This script allows you to switch between virtual desktops on Windows 10/11 
-using mouse scroll and hot corner.
+This script allows you to switch between virtual desktops on Windows 
+and macOS using mouse scroll and a hot corner.
 
 Requirements:
 - pynput library (install using pip install pynput)
@@ -8,12 +8,22 @@ Requirements:
 
 Usage:
 1. Run the script.
-2. Move your cursor to the top of the screen and scroll the mouse wheel up 
-   or down to switch between virtual desktops.
+2. Move your cursor to the top of the screen and scroll the mouse wheel up or
+    down to switch between virtual desktops.
 3. Move the mouse to the upper-left corner of the screen to show the desktop
-   overview.
+    overview.
 
-Note: This script is specifically designed for Windows 10/11.
+Additional arguments (optional):
+--scroll_delay:   Sets the minimum delay (in seconds) between processing 
+                  consecutive scroll events.
+--repeat_delay:   Sets an additional delay (in seconds) for repeated scroll 
+                  events in the same direction.
+--hot_corner_delay: Sets the delay (in seconds) for triggering the hot corner 
+                    action. Set higher to avoid accidental triggers.
+
+Note:
+- On Windows: Designed for Windows 10/11.
+- On macOS: Shortcut keys are configured for macOS.
 """
 
 from pynput import mouse
