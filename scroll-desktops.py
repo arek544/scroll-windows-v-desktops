@@ -24,9 +24,7 @@ import screeninfo
 import sys
 import argparse
 
-
 #################### Windows-specific shortcuts ##############################
-
 
 def windows_desktop_overview() -> None:
     """
@@ -59,7 +57,6 @@ def windows_switch_desktops(direction: str) -> None:
     else:
         keyboard.release(Key.left)
 
-
 #################### macOS-specific shortcuts ################################
 
 def mac_switch_desktops(direction: str) -> None:
@@ -90,9 +87,7 @@ def mac_desktop_overview() -> None:
     keyboard.release(Key.ctrl)
     keyboard.release(Key.up)
 
-
 ################## Create all trigger zones ##################################
-
 
 def get_trigger_area(monitor: screeninfo.common.Monitor, vertical_margin: int = 1) -> list:
     """
@@ -135,7 +130,6 @@ def is_point_inside_rectangle(point: list, rectangle: list) -> bool:
         return True
     else:
         return False
-
 
 ######################### Event handlers #####################################
 
@@ -204,7 +198,6 @@ def on_move(x: int, y: int) -> None:
 
         last_hot_corner_time = current_time
 
-
 ####################### Main script ###########################################
 
 if __name__ == '__main__':
@@ -238,12 +231,12 @@ if __name__ == '__main__':
     last_move = None
 
     # Determine the OS and set the appropriate shortcuts
-    os = sys.platform
-    if os == 'win32':
+    platform_system = sys.platform
+    if platform_system == 'win32':
         # Windows-specific functions
         switch_desktops = windows_switch_desktops
         desktop_overview = windows_desktop_overview
-    elif os == 'darwin':
+    elif platform_system == 'darwin':
         # Mac-specific functions
         switch_desktops = mac_switch_desktops
         desktop_overview = mac_desktop_overview
