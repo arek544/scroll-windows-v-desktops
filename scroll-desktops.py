@@ -61,6 +61,16 @@ def windows_switch_desktops(direction: str) -> None:
 
 
 def get_trigger_area(monitor: screeninfo.common.Monitor, vertical_margin: int = 1) -> list:
+    """
+    Get the trigger area for switching desktops.
+
+    Args:
+        monitor (screeninfo.common.Monitor): The monitor object.
+        vertical_margin (int): The vertical margin for the trigger area. Default 1 pixel.
+
+    Returns:
+        list: The coordinates of the trigger area [x_left, y_left, x_right, y_right].
+    """
     return [
         monitor.x,
         monitor.y,
