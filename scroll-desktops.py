@@ -60,8 +60,7 @@ def windows_switch_desktops(dy: int) -> None:
 ################## Create all trigger zones ##################################
 
 
-def get_trigger_area(monitor: screeninfo.common.Monitor) -> list:
-    vertical_margin = 30
+def get_trigger_area(monitor: screeninfo.common.Monitor, vertical_margin: int = 1) -> list:
     return [
         monitor.x,
         monitor.y,
