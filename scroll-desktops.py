@@ -28,7 +28,7 @@ import argparse
 #################### Windows-specific shortcuts ##############################
 
 
-def winows_desktop_overview() -> None:
+def windows_desktop_overview() -> None:
     """
     Shows the desktop overview on Windows 10/11.
     """
@@ -242,7 +242,7 @@ if __name__ == '__main__':
     if os == 'win32':
         # Windows-specific functions
         switch_desktops = windows_switch_desktops
-        desktop_overview = winows_desktop_overview
+        desktop_overview = windows_desktop_overview
     elif os == 'darwin':
         # Mac-specific functions
         switch_desktops = mac_switch_desktops
