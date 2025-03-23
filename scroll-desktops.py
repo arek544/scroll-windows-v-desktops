@@ -282,17 +282,19 @@ if __name__ == '__main__':
           # Windows-specific functions
           switch_desktops = windows_switch_desktops
           desktop_overview = windows_desktop_overview
+          print("Windows OS detected")
      elif platform_system == 'darwin':
           # Mac-specific functions
           switch_desktops = mac_switch_desktops
           desktop_overview = mac_desktop_overview
+          print("macOS OS detected")
      else:
           print("Unsupported OS")
           sys.exit(1)
 
      # Get the trigger areas for each monitor
      monitors = [get_trigger_area(monitor) for monitor in get_monitors()]
-     print("Monitors: ", len(monitors))
+     print(f"Found {len(monitors)} monitors")
 
      # Initialize the keyboard controller
      keyboard = Controller()
