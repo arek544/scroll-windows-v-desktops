@@ -35,23 +35,23 @@ def winows_desktop_overview() -> None:
     keyboard.release(Key.tab)
 
 
-def windows_switch_desktops(dy: int) -> None:
+def windows_switch_desktops(direction: str) -> None:
     """
-    Switches desktops on Windows 10.
+    Switches between virtual desktops on Windows 10/11.
 
     Args:
-      dy (int): The vertical distance scrolled.
+        direction (str): The direction to switch desktops. Can be 'right' or 'left'.
     """
     keyboard.press(Key.cmd)
     keyboard.press(Key.ctrl)
-    if dy < 0:
+    if direction == 'right':
         keyboard.press(Key.right)
     else:
         keyboard.press(Key.left)
 
     keyboard.release(Key.cmd)
     keyboard.release(Key.ctrl)
-    if dy < 0:
+    if direction == 'right': 
         keyboard.release(Key.right)
     else:
         keyboard.release(Key.left)
@@ -102,7 +102,7 @@ keyboard = Controller()
 last_scroll_time = time.time()
 last_hot_corner_time = time.time()
 last_esc_press_time = time.time()
-
+last_move = None
 
 ######################### Event handlers #####################################
 
@@ -119,20 +119,20 @@ def on_scroll(x: int, y: int, dx: int, dy: int) -> None:
     """
 
     global last_scroll_time
+    global last_move
     current_time = time.time()
-    scroll_delay = 0.3
+    scroll_delay = 0.1 # delay between triggers
+    repeat_delay = 0.3 # delay between repeated triggers
 
     # If the time since the last scroll is greater than the delay
-    if current_time - last_scroll_time >= scroll_delay:
+    delta_t = current_time - last_scroll_time
+    if delta_t >= scroll_delay:
         # If the mouse is within the bounds of the trigger area
-        if any(
-            [
-                is_point_inside_rectangle((x, y), monitor)
-                for monitor in monitors
-            ]
-        ):
-            # Press shortcut to switch desktops
-            windows_switch_desktops(dy)
+        if any(is_point_inside_rectangle((x, y), monitor) for monitor in monitors):
+            move = 'right' if dy < 0 else 'left'
+            if last_move != move or delta_t >= repeat_delay:
+                windows_switch_desktops(move)
+                last_move = move
 
         last_scroll_time = current_time
 
