@@ -27,7 +27,7 @@ import screeninfo
 
 def winows_desktop_overview() -> None:
     """
-    Shows the desktop overview on Windows 10.
+    Shows the desktop overview on Windows 10/11.
     """
     keyboard.press(Key.cmd)
     keyboard.press(Key.tab)
