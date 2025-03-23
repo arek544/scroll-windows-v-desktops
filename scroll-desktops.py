@@ -21,6 +21,7 @@ from pynput.keyboard import Key, Controller
 import time
 from screeninfo import get_monitors
 import screeninfo
+import sys
 import argparse
 
 
@@ -57,6 +58,37 @@ def windows_switch_desktops(direction: str) -> None:
         keyboard.release(Key.right)
     else:
         keyboard.release(Key.left)
+
+
+#################### macOS-specific shortcuts ################################
+
+def mac_switch_desktops(direction: str) -> None:
+    """
+    Switches between virtual desktops on macOS.
+
+    Args:
+        direction (str): The direction to switch desktops. Can be 'right' or 'left'.
+    """
+    if direction == 'right':
+        keyboard.press(Key.ctrl)
+        keyboard.press(Key.right)
+        keyboard.release(Key.ctrl)
+        keyboard.release(Key.right)
+    else:
+        keyboard.press(Key.ctrl)
+        keyboard.press(Key.left)
+        keyboard.release(Key.ctrl)
+        keyboard.release(Key.left)
+
+
+def mac_desktop_overview() -> None:
+    """
+    Shows the desktop overview on macOS.
+    """
+    keyboard.press(Key.ctrl)
+    keyboard.press(Key.up)
+    keyboard.release(Key.ctrl)
+    keyboard.release(Key.up)
 
 
 ################## Create all trigger zones ##################################
@@ -145,7 +177,7 @@ def on_scroll(x: int, y: int, dx: int, dy: int, scroll_delay: float = 0.1, repea
         if any(is_point_inside_rectangle((x, y), monitor) for monitor in monitors):
             move = 'right' if dy < 0 else 'left'
             if last_move != move or delta_t >= repeat_delay:
-                windows_switch_desktops(move)
+                switch_desktops(move)
                 last_move = move
 
         last_scroll_time = current_time
@@ -168,7 +200,7 @@ def on_move(x: int, y: int) -> None:
         delay = 0.5
         if current_time - last_hot_corner_time >= delay:
             # Press shortcut to show desktop overview
-            winows_desktop_overview()
+            desktop_overview()
 
         last_hot_corner_time = current_time
 
@@ -205,6 +237,19 @@ if __name__ == '__main__':
     last_hot_corner_time = time.time()
     last_move = None
 
+    # Determine the OS and set the appropriate shortcuts
+    os = sys.platform
+    if os == 'win32':
+        # Windows-specific functions
+        switch_desktops = windows_switch_desktops
+        desktop_overview = winows_desktop_overview
+    elif os == 'darwin':
+        # Mac-specific functions
+        switch_desktops = mac_switch_desktops
+        desktop_overview = mac_desktop_overview
+    else:
+        print("Unsupported OS")
+        sys.exit(1)
 
     # Get the trigger areas for each monitor
     monitors = [get_trigger_area(monitor) for monitor in get_monitors()]
