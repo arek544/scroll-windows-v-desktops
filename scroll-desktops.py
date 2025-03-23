@@ -133,7 +133,8 @@ def is_point_inside_rectangle(point: list, rectangle: list) -> bool:
 
 ######################### Event handlers #####################################
 
-def on_scroll(x: int, y: int, dx: int, dy: int, scroll_delay: float = 0.1, repeat_delay: float = 0.2) -> None:
+def on_scroll(x: int, y: int, dx: int, dy: int, scroll_delay: float = 0.1, 
+              repeat_delay: float = 0.2) -> None:
     """
     Handles mouse scroll events for switching desktops based on the scroll direction and position.
 
@@ -162,19 +163,21 @@ def on_scroll(x: int, y: int, dx: int, dy: int, scroll_delay: float = 0.1, repea
 
     global last_scroll_time
     global last_move
+    global last_trigger_time
     current_time = time.time()
 
-    # If the time since the last scroll is greater than the delay
-    delta_t = current_time - last_scroll_time
-    if delta_t >= scroll_delay:
+    delta_trigger = current_time - last_trigger_time
+    last_trigger_time = current_time
+
+    if delta_trigger > scroll_delay:
         # If the mouse is within the bounds of the trigger area
         if any(is_point_inside_rectangle((x, y), monitor) for monitor in monitors):
             move = 'right' if dy < 0 else 'left'
-            if last_move != move or delta_t >= repeat_delay:
+            # don't wait if direction has changed, wait if repeated
+            if last_move != move or time.time() - last_scroll_time >= repeat_delay:
                 switch_desktops(move)
                 last_move = move
-
-        last_scroll_time = current_time
+                last_scroll_time = current_time
 
 
 def on_move(x: int, y: int, delay: float = 0.5) -> None:
@@ -214,7 +217,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--repeat_delay",
         type=float,
-        default=0.2,
+        default=0.3,
         help="Additional delay for repeated scroll events in the same direction (default: 0.2 seconds).",
     )
     parser.add_argument(
@@ -239,6 +242,7 @@ if __name__ == '__main__':
     # Initialize global variables
     last_scroll_time = time.time()
     last_hot_corner_time = time.time()
+    last_trigger_time = time.time()
     last_move = None
 
     # Determine the OS and set the appropriate shortcuts
