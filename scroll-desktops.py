@@ -107,23 +107,36 @@ def is_point_inside_rectangle(point: list, rectangle: list) -> bool:
 
 ######################### Event handlers #####################################
 
-
-def on_scroll(x: int, y: int, dx: int, dy: int) -> None:
+def on_scroll(x: int, y: int, dx: int, dy: int, scroll_delay: float = 0.1, repeat_delay: float = 0.2) -> None:
     """
-    Event handler for mouse scroll events.
+    Handles mouse scroll events for switching desktops based on the scroll direction and position.
+
+    This function checks whether the scroll event occurs within any defined monitor regions.
+    If so, it determines the desired desktop switch direction based on the vertical scroll delta (dy).
+    A desktop switch is triggered if sufficient time has elapsed since the last scroll (as per scroll_delay)
+    or if a repeated scroll in the same direction occurs after the repeat_delay.
 
     Args:
-      x (int): The x-coordinate of the mouse cursor.
-      y (int): The y-coordinate of the mouse cursor.
-      dx (int): The horizontal distance scrolled.
-      dy (int): The vertical distance scrolled.
+        x (int): The x-coordinate of the mouse at the time of the scroll event.
+        y (int): The y-coordinate of the mouse at the time of the scroll event.
+        dx (int): The horizontal component of the scroll delta.
+        dy (int): The vertical component of the scroll delta.
+        scroll_delay (float, optional): The minimum delay between processing consecutive scroll events.
+                                        Default is 0.1.
+        repeat_delay (float, optional): The additional delay required before processing a repeated scroll event
+                                        in the same direction. Default is 0.2.
+
+    Returns:
+        None
+
+    Side Effects:
+        Updates the global variables 'last_scroll_time' and 'last_move' and calls 'switch_desktops(move)'
+        to switch desktops based on the computed direction.
     """
 
     global last_scroll_time
     global last_move
     current_time = time.time()
-    scroll_delay = 0.1 # delay between triggers
-    repeat_delay = 0.3 # delay between repeated triggers
 
     # If the time since the last scroll is greater than the delay
     delta_t = current_time - last_scroll_time
