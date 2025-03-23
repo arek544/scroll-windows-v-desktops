@@ -21,6 +21,8 @@ from pynput.keyboard import Key, Controller
 import time
 from screeninfo import get_monitors
 import screeninfo
+import argparse
+
 
 #################### Windows-specific shortcuts ##############################
 
@@ -103,17 +105,6 @@ def is_point_inside_rectangle(point: list, rectangle: list) -> bool:
         return False
 
 
-############################ Initialization ##################################
-
-monitors = [get_trigger_area(monitor) for monitor in get_monitors()]
-print("Monitors: ", len(monitors))
-
-keyboard = Controller()
-last_scroll_time = time.time()
-last_hot_corner_time = time.time()
-last_esc_press_time = time.time()
-last_move = None
-
 ######################### Event handlers #####################################
 
 
@@ -169,7 +160,46 @@ def on_move(x: int, y: int) -> None:
         last_hot_corner_time = current_time
 
 
-######################### Event loop ##########################################
+####################### Main script ###########################################
 
-with mouse.Listener(on_scroll=on_scroll, on_move=on_move) as listener:
-    listener.join()
+if __name__ == '__main__':
+
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(
+        description="Switch virtual desktops using mouse scroll and a hot corner."
+    )
+    parser.add_argument(
+        "--scroll_delay",
+        type=float,
+        default=0.1,
+        help="Minimum delay between processing consecutive scroll events (default: 0.1 seconds).",
+    )
+    parser.add_argument(
+        "--repeat_delay",
+        type=float,
+        default=0.2,
+        help="Additional delay for repeated scroll events in the same direction (default: 0.2 seconds).",
+    )
+    args = parser.parse_args()
+
+    # Override the on_scroll function to include the scroll_delay and repeat_delay arguments
+    _original_on_scroll = on_scroll
+    def on_scroll(x, y, dx, dy):
+        _original_on_scroll(x, y, dx, dy, scroll_delay=args.scroll_delay, repeat_delay=args.repeat_delay)
+
+    # Initialize global variables
+    last_scroll_time = time.time()
+    last_hot_corner_time = time.time()
+    last_move = None
+
+
+    # Get the trigger areas for each monitor
+    monitors = [get_trigger_area(monitor) for monitor in get_monitors()]
+    print("Monitors: ", len(monitors))
+
+    # Initialize the keyboard controller
+    keyboard = Controller()
+
+    # Event loop: listener for mouse scroll and move events
+    with mouse.Listener(on_scroll=on_scroll, on_move=on_move) as listener:
+        listener.join()
