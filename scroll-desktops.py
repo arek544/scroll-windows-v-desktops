@@ -177,7 +177,7 @@ def on_scroll(x: int, y: int, dx: int, dy: int, scroll_delay: float = 0.1, repea
         last_scroll_time = current_time
 
 
-def on_move(x: int, y: int) -> None:
+def on_move(x: int, y: int, delay: float = 0.5) -> None:
     """
     Callback function triggered when the mouse moves.
 
@@ -191,7 +191,6 @@ def on_move(x: int, y: int) -> None:
 
     # If the mouse is in the upper-left corner of the screen
     if x >= 0 and x <= 1 and y >= 0 and y <= 1:
-        delay = 0.5
         if current_time - last_hot_corner_time >= delay:
             # Press shortcut to show desktop overview
             desktop_overview()
@@ -218,12 +217,24 @@ if __name__ == '__main__':
         default=0.2,
         help="Additional delay for repeated scroll events in the same direction (default: 0.2 seconds).",
     )
+    parser.add_argument(
+        "--hot_corner_delay",
+        type=float,
+        default=0.5,
+        help="Delay for triggering the hot corner action (default: 0.5 seconds).",
+    )
     args = parser.parse_args()
 
     # Override the on_scroll function to include the scroll_delay and repeat_delay arguments
     _original_on_scroll = on_scroll
     def on_scroll(x, y, dx, dy):
-        _original_on_scroll(x, y, dx, dy, scroll_delay=args.scroll_delay, repeat_delay=args.repeat_delay)
+        _original_on_scroll(x, y, dx, dy, scroll_delay=args.scroll_delay, 
+                            repeat_delay=args.repeat_delay)
+        
+    # Override the on_move function to include the hot_corner_delay argument
+    _original_on_move = on_move
+    def on_move(x, y):
+        _original_on_move(x, y, delay=args.hot_corner_delay)
 
     # Initialize global variables
     last_scroll_time = time.time()
